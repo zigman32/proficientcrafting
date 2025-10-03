@@ -1,0 +1,6 @@
+{
+  "parent": "qualitycrafting:block/sepiatemplate_anvil",
+  "textures": {
+    "top": "qualitycrafting:block/sepiaanvil"
+  }
+}
