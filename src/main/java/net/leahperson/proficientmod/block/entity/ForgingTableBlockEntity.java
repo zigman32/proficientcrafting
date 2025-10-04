@@ -26,13 +26,57 @@ import java.awt.*;
 
 public class ForgingTableBlockEntity extends BlockEntity {
 
-    public final ItemStackHandler itemHandler = new ItemStackHandler(9);
+    public static final int NUM_SLOTS = 9;
+
+    public final ItemStackHandler itemHandler = new ItemStackHandler(NUM_SLOTS);
+    //public final int slotsOccupied = 0;
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     public ForgingTableBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.FORGING_TABLE_BE.get(), pPos, pBlockState);
 
+
+    }
+
+    public boolean isFull(){
+        for (int i = 0; i < NUM_SLOTS; i++) {
+            if(itemHandler.getStackInSlot(i).isEmpty()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isEmpty(){
+        for (int i = 0; i < NUM_SLOTS; i++) {
+            if(!itemHandler.getStackInSlot(i).isEmpty()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void insertItem(ItemStack itemStack){
+        for (int i = 0; i < NUM_SLOTS; i++) {
+            if(itemHandler.getStackInSlot(i).isEmpty()){
+                var newStack = itemStack.split(1);
+                itemHandler.insertItem(i,newStack,false);
+                return;
+            }
+        }
+    }
+
+    public ItemStack removeLatestItem(){
+        for (int i = NUM_SLOTS-1; i >= 0; i--) {
+            if(!itemHandler.getStackInSlot(i).isEmpty()){
+
+
+
+                return itemHandler.extractItem(i,64,false);
+            }
+        }
+        return itemHandler.extractItem(0,64,false);
     }
 
 

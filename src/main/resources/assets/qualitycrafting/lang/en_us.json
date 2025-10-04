@@ -4,5 +4,6 @@
   "block.qualitycrafting.forging_table": "Forging Table",
 
 
-  "creativetab.proficient_tab":"Quality Crafting"
+  "creativetab.proficient_tab":"Quality Crafting",
+  "block.qualitycrafting.station.full": "The table is full"
 }

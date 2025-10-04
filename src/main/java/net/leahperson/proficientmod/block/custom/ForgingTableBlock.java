@@ -1,7 +1,9 @@
 package net.leahperson.proficientmod.block.custom;
 
 import net.leahperson.proficientmod.block.entity.ForgingTableBlockEntity;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
@@ -79,7 +81,32 @@ public class ForgingTableBlock extends BaseEntityBlock {
 
         BlockEntity forgingTableEntity = pLevel.getBlockEntity(pPos);
         if (forgingTableEntity instanceof ForgingTableBlockEntity forgingTableBlockEntity) {
-            pLevel.playSound(pPlayer, pPos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS,1f, 1f);
+
+            if(pPlayer.getInventory().getSelected().isEmpty()){
+                //Handslot is empty, try to remove from the anvil
+                if(forgingTableBlockEntity.isEmpty()){
+                    pPlayer.displayClientMessage(Component.translatable("block.qualitycrafting.station.empty"), true);
+                    return InteractionResult.FAIL;
+                }else{
+                    pPlayer.addItem(forgingTableBlockEntity.removeLatestItem());
+                    return InteractionResult.SUCCESS;
+                }
+            }else{
+                //Handslot has something in it, try to add to the anvil
+                if(forgingTableBlockEntity.isFull()){
+
+                    //pPlayer.displayClientMessage(,true);
+                    pPlayer.displayClientMessage(Component.translatable("block.qualitycrafting.station.full"), true);
+                    return InteractionResult.FAIL;
+                }else{
+                    forgingTableBlockEntity.insertItem(pPlayer.getInventory().getSelected());
+                    return InteractionResult.SUCCESS;
+                }
+
+            }
+            //if(((ForgingTableBlockEntity) forgingTableEntity).itemHandler.getStackInSlot(8).isEmpty()){}
+
+            //pLevel.playSound(pPlayer, pPos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS,1f, 1f);
 
         }
             //Optional<Vec2> optional = getRelativeHitCoordinatesForBlockFace(pHit, pState.getValue(HorizontalDirectionalBlock.FACING));
