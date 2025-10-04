@@ -1,12 +1,15 @@
 package net.leahperson.proficientmod.block.custom;
 
 import net.leahperson.proficientmod.block.entity.ForgingTableBlockEntity;
+import net.leahperson.proficientmod.util.ModTags;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -32,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class ForgingTableBlock extends BaseEntityBlock {
     public static final VoxelShape SHAPE = Block.box(0,0,0,16,16,16);
@@ -72,7 +76,7 @@ public class ForgingTableBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         BlockEntity forgingTableEntity = pLevel.getBlockEntity(pPos);
         if (forgingTableEntity instanceof ForgingTableBlockEntity forgingTableBlockEntity) {
-            if(pPlayer.getInventory().getSelected().isEmpty()){
+            if(pPlayer.getItemInHand(pHand).isEmpty()){
                 //Handslot is empty, try to remove from the anvil
                 if(forgingTableBlockEntity.isEmpty()){
                     //pPlayer.displayClientMessage(Component.literal("Nothing in table"),false);
@@ -80,17 +84,42 @@ public class ForgingTableBlock extends BaseEntityBlock {
                     return InteractionResult.CONSUME;
                 }else{
                     forgingTableBlockEntity.removeLatestItem(pLevel,pPos,pState,pPlayer);
-
                     return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }
             }else{
-                //Handslot has something in it, try to add to the anvil
-                if(forgingTableBlockEntity.isFull()){
-                    //pPlayer.displayClientMessage(Component.literal("Table is full"),false);
-                    return InteractionResult.CONSUME;
+                //Handslot has something in it, try to add to the anvil or craft
+                if(pPlayer.getItemInHand(pHand).getTags().anyMatch(Predicate.isEqual(ModTags.Items.FORGING_HAMMER))){
+                    //Craft
+
+                    boolean result = forgingTableBlockEntity.attemptCraft(pLevel,pPos,pState,pPlayer);
+                    if(!result){
+                        //pPlayer.displayClientMessage(Component.literal("Craft Failed"),false);
+
+                        return InteractionResult.CONSUME;
+                    }else{
+                        pLevel.playSound(pPlayer, pPos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS,
+                                1f, 1f);
+
+                        RandomSource myRandom = RandomSource.create();
+                        for(int i = 0; i < 20; i++) {
+                            pLevel.addParticle(ParticleTypes.HAPPY_VILLAGER, (double)pPos.getX() + 0.5D, (double)pPos.getY() + 1.0D, (double)pPos.getZ() + 0.5D, 5*((double)((float)pPos.getX() + myRandom.nextFloat()) - 0.5D), 5*((double)((float)pPos.getY() - myRandom.nextFloat() - 1.0F)), 5*((double)((float)pPos.getZ() + myRandom.nextFloat()) - 0.5D));
+                        }
+                        //pPlayer.displayClientMessage(Component.literal("Craft Succeeded"),false);
+
+                        return InteractionResult.sidedSuccess(pLevel.isClientSide);
+                    }
+
+
+
                 }else{
-                    forgingTableBlockEntity.insertItem(pLevel,pPos,pState,pPlayer.getInventory().getSelected());
-                    return InteractionResult.sidedSuccess(pLevel.isClientSide);
+                    //Attempt to insert item.
+                    if(forgingTableBlockEntity.isFull()){
+                        //pPlayer.displayClientMessage(Component.literal("Table is full"),false);
+                        return InteractionResult.CONSUME;
+                    }else{
+                        forgingTableBlockEntity.insertItem(pLevel,pPos,pState,pPlayer.getItemInHand(pHand));
+                        return InteractionResult.sidedSuccess(pLevel.isClientSide);
+                    }
                 }
 
             }

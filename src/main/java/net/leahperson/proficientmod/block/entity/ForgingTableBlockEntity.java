@@ -147,12 +147,22 @@ public class ForgingTableBlockEntity extends BlockEntity {
         return false;
     }
 
-    public void attemptCraft(Player pPlayer){
-        /*if(hasRecipe()){
+    public boolean attemptCraft(Level pLevel, BlockPos pPos, BlockState pState,Player pPlayer){
+        if(hasRecipe()){
             craftItem();
+            setChanged(pLevel,pPos,pState);
+            return true;
         }else{
-            //Failure
-        }*/
+            return false;
+        }
+    }
+
+    public void craftItem(){
+        itemHandler.extractItem(0,1,false);
+        ItemStack result = new ItemStack(Items.IRON_INGOT,1);
+        itemHandler.setStackInSlot(0,new ItemStack(result.getItem(),result.getCount()));
+
+        //itemHandler.insertItem(0,1,new ItemStack(Items.IRON_INGOT))
     }
 
     @Override
