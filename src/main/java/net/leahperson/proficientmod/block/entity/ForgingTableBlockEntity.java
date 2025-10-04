@@ -107,8 +107,6 @@ public class ForgingTableBlockEntity extends BlockEntity {
                     return;
                 }
             }
-
-
         }
     }
 

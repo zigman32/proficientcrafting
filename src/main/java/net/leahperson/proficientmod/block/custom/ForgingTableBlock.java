@@ -84,7 +84,7 @@ public class ForgingTableBlock extends BaseEntityBlock {
                     return InteractionResult.CONSUME;
                 }else{
                     forgingTableBlockEntity.removeLatestItem(pLevel,pPos,pState,pPlayer);
-                    return InteractionResult.sidedSuccess(pLevel.isClientSide);
+                    return InteractionResult.sidedSuccess(!pLevel.isClientSide);
                 }
             }else{
                 //Handslot has something in it, try to add to the anvil or craft
@@ -97,16 +97,18 @@ public class ForgingTableBlock extends BaseEntityBlock {
 
                         return InteractionResult.CONSUME;
                     }else{
-                        pLevel.playSound(pPlayer, pPos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS,
-                                1f, 1f);
 
-                        RandomSource myRandom = RandomSource.create();
-                        for(int i = 0; i < 20; i++) {
-                            pLevel.addParticle(ParticleTypes.HAPPY_VILLAGER, (double)pPos.getX() + 0.5D, (double)pPos.getY() + 1.0D, (double)pPos.getZ() + 0.5D, 5*((double)((float)pPos.getX() + myRandom.nextFloat()) - 0.5D), 5*((double)((float)pPos.getY() - myRandom.nextFloat() - 1.0F)), 5*((double)((float)pPos.getZ() + myRandom.nextFloat()) - 0.5D));
-                        }
+                            pLevel.playSound(pPlayer, pPos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS,
+                                    1f, 1f);
+
+                            RandomSource myRandom = RandomSource.create();
+                            for (int i = 0; i < 20; i++) {
+                                pLevel.addParticle(ParticleTypes.HAPPY_VILLAGER, (double) pPos.getX() + 0.5D, (double) pPos.getY() + 1.0D, (double) pPos.getZ() + 0.5D, 5 * ((double) ((float) pPos.getX() + myRandom.nextFloat()) - 0.5D), 5 * ((double) ((float) pPos.getY() - myRandom.nextFloat() - 1.0F)), 5 * ((double) ((float) pPos.getZ() + myRandom.nextFloat()) - 0.5D));
+                            }
+
                         //pPlayer.displayClientMessage(Component.literal("Craft Succeeded"),false);
 
-                        return InteractionResult.sidedSuccess(pLevel.isClientSide);
+                        return InteractionResult.sidedSuccess(!pLevel.isClientSide);
                     }
 
 
@@ -118,7 +120,7 @@ public class ForgingTableBlock extends BaseEntityBlock {
                         return InteractionResult.CONSUME;
                     }else{
                         forgingTableBlockEntity.insertItem(pLevel,pPos,pState,pPlayer.getItemInHand(pHand));
-                        return InteractionResult.sidedSuccess(pLevel.isClientSide);
+                        return InteractionResult.sidedSuccess(!pLevel.isClientSide);
                     }
                 }
 
