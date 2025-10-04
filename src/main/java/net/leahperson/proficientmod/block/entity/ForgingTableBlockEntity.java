@@ -3,15 +3,19 @@ package net.leahperson.proficientmod.block.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -22,19 +26,32 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
-
 public class ForgingTableBlockEntity extends BlockEntity {
 
     public static final int NUM_SLOTS = 9;
 
-    public final ItemStackHandler itemHandler = new ItemStackHandler(NUM_SLOTS);
+
+    class OneSlotItemHandler extends ItemStackHandler {
+        public OneSlotItemHandler(int numSlots) {
+            super(numSlots);
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return 1;
+        }
+    }
+
+    public final OneSlotItemHandler itemHandler = new OneSlotItemHandler(NUM_SLOTS);
+
+
     //public final int slotsOccupied = 0;
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     public ForgingTableBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.FORGING_TABLE_BE.get(), pPos, pBlockState);
+
 
 
     }
@@ -57,26 +74,33 @@ public class ForgingTableBlockEntity extends BlockEntity {
         return true;
     }
 
-    public void insertItem(ItemStack itemStack){
-        for (int i = 0; i < NUM_SLOTS; i++) {
-            if(itemHandler.getStackInSlot(i).isEmpty()){
-                var newStack = itemStack.split(1);
-                itemHandler.insertItem(i,newStack,false);
-                return;
+
+
+    public void insertItem(Level pLevel, ItemStack pItemStack){
+        if (!pLevel.isClientSide) {
+            for (int i = 0; i < NUM_SLOTS; i++) {
+                if (itemHandler.getStackInSlot(i).isEmpty()) {
+                    itemHandler.insertItem(i, pItemStack.split(1),false);
+                    return;
+                }
             }
         }
     }
 
-    public ItemStack removeLatestItem(){
-        for (int i = NUM_SLOTS-1; i >= 0; i--) {
-            if(!itemHandler.getStackInSlot(i).isEmpty()){
-
-
-
-                return itemHandler.extractItem(i,64,false);
+    public void removeLatestItem(Level pLevel, Player pPlayer){
+        if (!pLevel.isClientSide) {
+            for (int i = 9-1; i >= 0; i--) {
+                if (!itemHandler.getStackInSlot(i).isEmpty()) {
+                    ItemStack itemstack = itemHandler.getStackInSlot(i).split(1);
+                    if (!pPlayer.getInventory().add(itemstack)) {
+                        pPlayer.drop(itemstack, false);
+                    }
+                    return;
+                }
             }
+
+
         }
-        return itemHandler.extractItem(0,64,false);
     }
 
 
@@ -126,5 +150,6 @@ public class ForgingTableBlockEntity extends BlockEntity {
 
     public InteractionResult craftItem(Level pLevel, BlockPos pPos, Player pPlayer, ItemStack pItemStack, int pSlot){
         return InteractionResult.SUCCESS;
+
     }
 }

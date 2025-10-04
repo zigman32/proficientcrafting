@@ -70,68 +70,31 @@ public class ForgingTableBlock extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        /*if (!pLevel.isClientSide()) {
-            BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if(entity instanceof ForgingTableBlockEntity) {
-                NetworkHooks.openScreen(((ServerPlayer)pPlayer), (GemPolishingStationBlockEntity)entity, pPos);
-            } else {
-                throw new IllegalStateException("Our Container provider is missing!");
-            }
-        }*/
-
         BlockEntity forgingTableEntity = pLevel.getBlockEntity(pPos);
         if (forgingTableEntity instanceof ForgingTableBlockEntity forgingTableBlockEntity) {
-
             if(pPlayer.getInventory().getSelected().isEmpty()){
                 //Handslot is empty, try to remove from the anvil
                 if(forgingTableBlockEntity.isEmpty()){
-                    pPlayer.displayClientMessage(Component.translatable("block.qualitycrafting.station.empty"), true);
-                    return InteractionResult.FAIL;
+                    pPlayer.displayClientMessage(Component.literal("Nothing in table"),false);
+
+                    return InteractionResult.CONSUME;
                 }else{
-                    pPlayer.addItem(forgingTableBlockEntity.removeLatestItem());
+                    forgingTableBlockEntity.removeLatestItem(pLevel,pPlayer);
                     return InteractionResult.SUCCESS;
                 }
             }else{
                 //Handslot has something in it, try to add to the anvil
                 if(forgingTableBlockEntity.isFull()){
-
-                    //pPlayer.displayClientMessage(,true);
-                    pPlayer.displayClientMessage(Component.translatable("block.qualitycrafting.station.full"), true);
-                    return InteractionResult.FAIL;
+                    pPlayer.displayClientMessage(Component.literal("Table is full"),false);
+                    return InteractionResult.CONSUME;
                 }else{
-                    forgingTableBlockEntity.insertItem(pPlayer.getInventory().getSelected());
+                    forgingTableBlockEntity.insertItem(pLevel,pPlayer.getInventory().getSelected());
                     return InteractionResult.SUCCESS;
                 }
 
             }
-            //if(((ForgingTableBlockEntity) forgingTableEntity).itemHandler.getStackInSlot(8).isEmpty()){}
-
-            //pLevel.playSound(pPlayer, pPos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS,1f, 1f);
 
         }
-            //Optional<Vec2> optional = getRelativeHitCoordinatesForBlockFace(pHit, pState.getValue(HorizontalDirectionalBlock.FACING));
-            /*if (optional.isEmpty()) {
-                return InteractionResult.PASS;
-            } else {
-                int i = getHitSlot(optional.get());
-                if (pState.getValue(SLOT_OCCUPIED_PROPERTIES.get(i))) {
-                    removeBook(pLevel, pPos, pPlayer, chiseledbookshelfblockentity, i);
-                    return InteractionResult.sidedSuccess(pLevel.isClientSide);
-                } else {
-                    ItemStack itemstack = pPlayer.getItemInHand(pHand);
-                    if (itemstack.is(ItemTags.BOOKSHELF_BOOKS)) {
-                        addBook(pLevel, pPos, pPlayer, chiseledbookshelfblockentity, itemstack, i);
-                        return InteractionResult.sidedSuccess(pLevel.isClientSide);
-                    } else {
-                        return InteractionResult.CONSUME;
-                    }
-                }
-            }
-        } else {
-            return InteractionResult.PASS;
-        }*/
-
-
         return InteractionResult.SUCCESS;
     }
 
