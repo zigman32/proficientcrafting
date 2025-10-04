@@ -80,7 +80,7 @@ public class ForgingTableBlock extends BaseEntityBlock {
                     return InteractionResult.CONSUME;
                 }else{
                     forgingTableBlockEntity.removeLatestItem(pLevel,pPlayer);
-                    return InteractionResult.SUCCESS;
+                    return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }
             }else{
                 //Handslot has something in it, try to add to the anvil
@@ -89,13 +89,13 @@ public class ForgingTableBlock extends BaseEntityBlock {
                     return InteractionResult.CONSUME;
                 }else{
                     forgingTableBlockEntity.insertItem(pLevel,pPlayer.getInventory().getSelected());
-                    return InteractionResult.SUCCESS;
+                    return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }
 
             }
 
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.PASS;
     }
 
     public void addItem(Level pLevel, BlockPos pPos, Player pPlayer, ChiseledBookShelfBlockEntity pBlockEntity, ItemStack pItemStack){
