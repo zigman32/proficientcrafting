@@ -75,20 +75,21 @@ public class ForgingTableBlock extends BaseEntityBlock {
             if(pPlayer.getInventory().getSelected().isEmpty()){
                 //Handslot is empty, try to remove from the anvil
                 if(forgingTableBlockEntity.isEmpty()){
-                    pPlayer.displayClientMessage(Component.literal("Nothing in table"),false);
+                    //pPlayer.displayClientMessage(Component.literal("Nothing in table"),false);
 
                     return InteractionResult.CONSUME;
                 }else{
-                    forgingTableBlockEntity.removeLatestItem(pLevel,pPlayer);
+                    forgingTableBlockEntity.removeLatestItem(pLevel,pPos,pState,pPlayer);
+
                     return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }
             }else{
                 //Handslot has something in it, try to add to the anvil
                 if(forgingTableBlockEntity.isFull()){
-                    pPlayer.displayClientMessage(Component.literal("Table is full"),false);
+                    //pPlayer.displayClientMessage(Component.literal("Table is full"),false);
                     return InteractionResult.CONSUME;
                 }else{
-                    forgingTableBlockEntity.insertItem(pLevel,pPlayer.getInventory().getSelected());
+                    forgingTableBlockEntity.insertItem(pLevel,pPos,pState,pPlayer.getInventory().getSelected());
                     return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }
 
