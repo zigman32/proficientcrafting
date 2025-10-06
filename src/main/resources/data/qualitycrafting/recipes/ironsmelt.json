@@ -1,0 +1,24 @@
+{
+  "type": "qualitycrafting:forging_table",
+  "ingredients": [
+    {
+      "item": "minecraft:raw_iron"
+    },
+    {
+      "item": "minecraft:raw_iron"
+    },
+    {
+      "item": "minecraft:coal"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "item": "minecraft:iron_ingot"
+  },
+  "proficiency": 5,
+  "qualityCosts": [10,20,30],
+  "qualityPerIngredient": [10,20,30],
+  "quantityCost": 10,
+  "quantityAdded": 1,
+  "xpCost": 10
+}

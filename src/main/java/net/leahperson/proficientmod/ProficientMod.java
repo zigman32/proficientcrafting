@@ -5,6 +5,7 @@ import net.leahperson.proficientmod.block.ModBlocks;
 import net.leahperson.proficientmod.block.entity.ModBlockEntities;
 import net.leahperson.proficientmod.item.ModCreativeModeTabs;
 import net.leahperson.proficientmod.item.ModItems;
+import net.leahperson.proficientmod.recipe.ModRecipes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
@@ -46,6 +47,7 @@ public class ProficientMod
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModBlockEntities.register(modEventBus);
+        ModRecipes.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 

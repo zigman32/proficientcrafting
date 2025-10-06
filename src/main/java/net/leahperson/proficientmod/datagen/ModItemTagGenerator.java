@@ -22,6 +22,7 @@ public class ModItemTagGenerator extends ItemTagsProvider {
         //Todo: Crafting station tag, Proficient Tool tag, Hammer etc tag
 
         this.tag(ModTags.Items.FORGING_HAMMER).add(ModItems.CRUDEHAMMER.get());
+        this.tag(ModTags.Items.FORGING_HAMMER).add(ModItems.IRONHAMMER.get());
 
 
     }

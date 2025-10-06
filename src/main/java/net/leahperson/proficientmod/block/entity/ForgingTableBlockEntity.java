@@ -1,14 +1,18 @@
 package net.leahperson.proficientmod.block.entity;
 
+import net.leahperson.proficientmod.ProficientMod;
 import net.leahperson.proficientmod.item.ModItems;
+import net.leahperson.proficientmod.recipe.ForgingTableRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
@@ -28,10 +32,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ForgingTableBlockEntity extends BlockEntity {
 
@@ -130,24 +131,17 @@ public class ForgingTableBlockEntity extends BlockEntity {
 
     }
 
-    public boolean hasRecipe(){
-
-        boolean hasItemHandler = this.itemHandler.getStackInSlot(0).getItem() == Items.RAW_IRON;
-        boolean isOnlyItem = this.itemHandler.getStackInSlot(1).isEmpty();
-
-        if(hasItemHandler && isOnlyItem){
-            return true;
-        }
-
-
-        //itemHandler.
-
-        return false;
-    }
 
     public boolean attemptCraft(Level pLevel, BlockPos pPos, BlockState pState,Player pPlayer){
         if(hasRecipe()){
             craftItem();
+            pLevel.playSound((Player) null, pPos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS,
+                    1f, 1f);
+
+            /*RandomSource myRandom = RandomSource.create();
+            for (int i = 0; i < 20; i++) {
+                pLevel.addParticle(ParticleTypes.HAPPY_VILLAGER, (double) pPos.getX() + 0.5D, (double) pPos.getY() + 1.5D, (double) pPos.getZ() + 0.5D, 5 * ((double) ((float) pPos.getX() + myRandom.nextFloat()) - 0.5D), 5 * ((double) ((float) pPos.getY() - myRandom.nextFloat() - 1.0F)), 5 * ((double) ((float) pPos.getZ() + myRandom.nextFloat()) - 0.5D));
+            }*/
             setChanged(pLevel,pPos,pState);
             return true;
         }else{
@@ -155,10 +149,39 @@ public class ForgingTableBlockEntity extends BlockEntity {
         }
     }
 
+
+    public boolean hasRecipe(){
+
+        Optional<ForgingTableRecipe> recipe = getCurrentRecipe();
+
+
+        if(recipe.isEmpty()){
+            return false;
+        }
+        return true;
+    }
+
+    private Optional<ForgingTableRecipe> getCurrentRecipe() {
+        SimpleContainer inventory = new SimpleContainer(this.itemHandler.getSlots());
+        for(int i = 0; i < itemHandler.getSlots(); i++){
+            inventory.setItem(i,this.itemHandler.getStackInSlot(i));
+        }
+
+
+
+        return this.level.getRecipeManager().getRecipeFor(ForgingTableRecipe.Type.INSTANCE,inventory,level);
+    }
+
     public void craftItem(){
-        itemHandler.extractItem(0,1,false);
-        ItemStack result = new ItemStack(Items.IRON_INGOT,1);
-        itemHandler.setStackInSlot(0,new ItemStack(result.getItem(),result.getCount()));
+
+        Optional<ForgingTableRecipe> recipe = getCurrentRecipe();
+        ItemStack result = recipe.get().getResultItem(null);
+
+        for(int i = 0; i < itemHandler.getSlots();i++){
+            itemHandler.extractItem(i,itemHandler.getStackInSlot(i).getCount(),false);
+        }
+        itemHandler.setStackInSlot(0,result);
+
 
         //itemHandler.insertItem(0,1,new ItemStack(Items.IRON_INGOT))
     }
