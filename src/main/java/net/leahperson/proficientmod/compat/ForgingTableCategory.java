@@ -121,11 +121,14 @@ public class ForgingTableCategory implements IRecipeCategory<ForgingTableRecipe>
         guiGraphics.drawString(Minecraft.getInstance().font,"Quality + ?",10,25,63*256*256+252*256+252,false);
         */
 
-        guiGraphics.drawString(Minecraft.getInstance().font,"Level Cost: 10",5,20,128*256*256+252*256+32,true);
+        guiGraphics.drawString(Minecraft.getInstance().font,Component.translatable("qualitycrafting.jei.levelcost").append(Integer.toString(8)),5,20,0xFF80FC20,true);
 
-        guiGraphics.drawString(Minecraft.getInstance().font,"Proficiency required: 10",10,90,63*256*256+63*256+63,false);
-        guiGraphics.drawString(Minecraft.getInstance().font,"Quality required: 15",10,100,63*256*256+63*256+63,false);
-        guiGraphics.drawString(Minecraft.getInstance().font,"+1 Output per 20 Yield",10,110,63*256*256+63*256+63,false);
+        guiGraphics.drawString(Minecraft.getInstance().font,Component.translatable("qualitycrafting.jei.proficiencycost").append(Integer.toString(10)),10,90,0xFF636363,false);
+        guiGraphics.drawString(Minecraft.getInstance().font,Component.translatable("qualitycrafting.jei.qualitycost").append(Integer.toString(10)),10,100,0xFF636363,false);
+
+        guiGraphics.drawString(Minecraft.getInstance().font,Component.translatable("qualitycrafting.jei.yieldcost",1,20),10,110,0xFF636363,false);
+
+        //guiGraphics.drawString(Minecraft.getInstance().font,Component.literal("+").append(Integer.toString(1)).append(Component.translatable("qualitycrafting.jei.yieldcost.1")).append(Integer.toString(10)).append(Component.translatable("qualitycrafting.jei.yieldcost.2")),10,110,0xFF636363,false);
 
         //guiGraphics.drawString(Minecraft.getInstance().font,"+",100,100,255*256*256+63*256+63,false);
 

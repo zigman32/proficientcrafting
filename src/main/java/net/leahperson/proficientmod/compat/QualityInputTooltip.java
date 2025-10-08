@@ -14,6 +14,7 @@ public class QualityInputTooltip implements IRecipeSlotRichTooltipCallback {
 
     @Override
     public void onRichTooltip(IRecipeSlotView recipeSlotView, ITooltipBuilder tooltip) {
+
         tooltip.add(Component.literal("+10 Quality if Uncommon\n+15 Quality if Rare\n+25 Quality if Legendary"));
 
 

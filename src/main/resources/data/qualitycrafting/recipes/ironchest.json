@@ -30,10 +30,22 @@
     "count": 1,
     "item": "iron_chestplate"
   },
+  "outputPerQuality": [
+    {
+      "count": 1,
+      "item": "golden_chestplate"
+    },{
+      "count": 1,
+      "item": "diamond_chestplate"
+    },{
+      "count": 1,
+      "item": "netherite_chestplate"
+    }
+  ],
   "proficiency": 5,
   "qualityCosts": [10,20,30],
-  "qualityPerIngredient": [10,20,30],
-  "quantityCost": 10,
-  "quantityAdded": 1,
-  "xpCost": 10
+  "qualityPerIngredient": [1,2.5,5],
+  "yieldCost": 10,
+  "yieldAdded": 1,
+  "levelCost": 10
 }

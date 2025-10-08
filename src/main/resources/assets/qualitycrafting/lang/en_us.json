@@ -6,5 +6,15 @@
 
 
   "creativetab.proficient_tab":"Quality Crafting",
-  "block.qualitycrafting.station.full": "The table is full"
+  "block.qualitycrafting.station.full": "The table is full",
+  "qualitycrafting.rarity.0": "Common",
+  "qualitycrafting.rarity.1": "Uncommon",
+  "qualitycrafting.rarity.2": "Rare",
+  "qualitycrafting.rarity.3": "Legendary",
+
+  "qualitycrafting.jei.levelcost": "Level Cost: ",
+  "qualitycrafting.jei.proficiencycost": "Proficiency required: ",
+  "qualitycrafting.jei.qualitycost": "Quality required: ",
+
+  "qualitycrafting.jei.yieldcost": "+%s Output per %s Yield"
 }

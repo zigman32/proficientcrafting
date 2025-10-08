@@ -5,9 +5,11 @@ import net.leahperson.proficientmod.block.ModBlocks;
 import net.leahperson.proficientmod.block.entity.ModBlockEntities;
 import net.leahperson.proficientmod.item.ModCreativeModeTabs;
 import net.leahperson.proficientmod.item.ModItems;
+import net.leahperson.proficientmod.nbt.QualityType;
 import net.leahperson.proficientmod.recipe.ModRecipes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -28,6 +30,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -48,6 +51,9 @@ public class ProficientMod
         ModBlocks.register(modEventBus);
         ModBlockEntities.register(modEventBus);
         ModRecipes.register(modEventBus);
+        modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) -> {
+            event.dataPackRegistry(QualityType.RARITY_REGISTRY, QualityType.CODEC);
+        });
 
         modEventBus.addListener(this::commonSetup);
 
@@ -79,5 +85,9 @@ public class ProficientMod
         public static void onClientSetup(FMLClientSetupEvent event) {
 
         }
+    }
+
+    public static ResourceLocation location(final String path) {
+        return ResourceLocation.fromNamespaceAndPath(ProficientMod.MOD_ID, path);
     }
 }
