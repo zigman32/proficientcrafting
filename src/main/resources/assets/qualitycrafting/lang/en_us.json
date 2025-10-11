@@ -15,6 +15,6 @@
   "qualitycrafting.jei.levelcost": "Level Cost: ",
   "qualitycrafting.jei.proficiencycost": "Proficiency required: ",
   "qualitycrafting.jei.qualitycost": "Quality required: ",
-
-  "qualitycrafting.jei.yieldcost": "+%s Output per %s Yield"
+  "qualitycrafting.jei.yieldcost": "+%s Output per %s Yield",
+  "qualitycrafting.jei.rarityinputtooltip": "+%s Quality if %s"
 }

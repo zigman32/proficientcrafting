@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.RecipeMatcher;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,9 @@ public class ForgingTableRecipe implements Recipe<SimpleContainer> {
     private final int yieldCost;
     private final int yieldAdded;
 
-    public ForgingTableRecipe(ResourceLocation id, NonNullList<Ingredient> inputItems, ItemStack output, NonNullList<ItemStack> outputs,  int proficiencyRequired, NonNullList<Integer> qualityRequired, NonNullList<Float> qualityPerIngredient, int levelCost, int yieldCost, int yieldAdded) {
+
+
+    public ForgingTableRecipe(ResourceLocation id, NonNullList<Ingredient> inputItems, ItemStack output, NonNullList<ItemStack> outputs, int proficiencyRequired, NonNullList<Integer> qualityRequired, NonNullList<Float> qualityPerIngredient, int levelCost, int yieldCost, int yieldAdded) {
 
 
         this.id = id;
@@ -47,6 +50,7 @@ public class ForgingTableRecipe implements Recipe<SimpleContainer> {
         this.yieldAdded = yieldAdded;
     }
 
+    
     @Override
     public boolean matches(SimpleContainer pContainer, Level pLevel) {
 
@@ -107,6 +111,38 @@ public class ForgingTableRecipe implements Recipe<SimpleContainer> {
     @Override
     public RecipeType<?> getType() {
         return Type.INSTANCE;
+    }
+    
+    public List<Float> getQualityPerIngredient(){
+        return this.qualityPerIngredient;
+    }
+
+    public ItemStack getOutputOfRarity(int rarity){
+        return this.outputs.get(rarity);
+    }
+
+    public int getNumOutputs(){
+        return outputs.size();
+    }
+
+    public int getLevelCost(){
+        return this.levelCost;
+    }
+
+    public Integer getProficiencyRequired() {
+        return proficiencyRequired;
+    }
+
+    public NonNullList<Integer> getQualityRequired() {
+        return qualityRequired;
+    }
+
+    public int getYieldCost() {
+        return yieldCost;
+    }
+
+    public int getYieldAdded() {
+        return yieldAdded;
     }
 
     public static class Type implements RecipeType<ForgingTableRecipe>{

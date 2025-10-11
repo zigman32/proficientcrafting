@@ -43,9 +43,9 @@
     }
   ],
   "proficiency": 5,
-  "qualityCosts": [10,20,30],
+  "qualityCosts": [11,22,33],
   "qualityPerIngredient": [1,2.5,5],
-  "yieldCost": 10,
-  "yieldAdded": 1,
-  "levelCost": 10
+  "yieldCost": 12,
+  "yieldAdded": 2,
+  "levelCost": 15
 }

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public record QualityType(int level, double bonus, ResourceLocation icon) {
+public record QualityType(int index, double bonus, ResourceLocation icon) {
 
     public static final ResourceKey<Registry<QualityType>> RARITY_REGISTRY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(ProficientMod.MOD_ID, "rarity"));
 
@@ -33,13 +33,13 @@ public record QualityType(int level, double bonus, ResourceLocation icon) {
 
 
     public static final Codec<QualityType> CODEC = RecordCodecBuilder.create(builder -> builder.group(
-                    Codec.INT.fieldOf("level").forGetter(QualityType::level),
+                    Codec.INT.fieldOf("index").forGetter(QualityType::index),
                     Codec.DOUBLE.fieldOf("bonus").forGetter(QualityType::bonus),
                     ResourceLocation.CODEC.fieldOf("icon").forGetter(QualityType::icon))
             .apply(builder, QualityType::new));
 
     public QualityType {
-        level = Math.max(0, level);
+        index = Math.max(0, index);
         bonus = bonus;
     }
 

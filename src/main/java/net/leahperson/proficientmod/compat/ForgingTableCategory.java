@@ -12,17 +12,23 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.leahperson.proficientmod.ProficientMod;
 import net.leahperson.proficientmod.block.ModBlocks;
+import net.leahperson.proficientmod.nbt.RarityNBT;
 import net.leahperson.proficientmod.recipe.ForgingTableRecipe;
 import net.leahperson.proficientmod.util.ModTags;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class ForgingTableCategory implements IRecipeCategory<ForgingTableRecipe> {
@@ -101,8 +107,15 @@ public class ForgingTableCategory implements IRecipeCategory<ForgingTableRecipe>
 
         builder.addSlot(RecipeIngredientRole.CATALYST,90,12).addIngredients(Ingredient.of(ModTags.Items.FORGING_HAMMER));
 
+
+
+
         builder.addSlot(RecipeIngredientRole.OUTPUT, 139, 52).addItemStack(recipe.getResultItem(null));
+
+
     }
+
+    //static int ticks = 0;
 
     @Override
     public void draw(ForgingTableRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
@@ -121,16 +134,52 @@ public class ForgingTableCategory implements IRecipeCategory<ForgingTableRecipe>
         guiGraphics.drawString(Minecraft.getInstance().font,"Quality + ?",10,25,63*256*256+252*256+252,false);
         */
 
-        guiGraphics.drawString(Minecraft.getInstance().font,Component.translatable("qualitycrafting.jei.levelcost").append(Integer.toString(8)),5,20,0xFF80FC20,true);
 
-        guiGraphics.drawString(Minecraft.getInstance().font,Component.translatable("qualitycrafting.jei.proficiencycost").append(Integer.toString(10)),10,90,0xFF636363,false);
-        guiGraphics.drawString(Minecraft.getInstance().font,Component.translatable("qualitycrafting.jei.qualitycost").append(Integer.toString(10)),10,100,0xFF636363,false);
+        //ticks++;
 
-        guiGraphics.drawString(Minecraft.getInstance().font,Component.translatable("qualitycrafting.jei.yieldcost",1,20),10,110,0xFF636363,false);
 
-        //guiGraphics.drawString(Minecraft.getInstance().font,Component.literal("+").append(Integer.toString(1)).append(Component.translatable("qualitycrafting.jei.yieldcost.1")).append(Integer.toString(10)).append(Component.translatable("qualitycrafting.jei.yieldcost.2")),10,110,0xFF636363,false);
+        guiGraphics.drawString(Minecraft.getInstance().font,Component.translatable("qualitycrafting.jei.levelcost").append(Integer.toString(recipe.getLevelCost())),5,20,0xFF80FC20,true);
 
-        //guiGraphics.drawString(Minecraft.getInstance().font,"+",100,100,255*256*256+63*256+63,false);
+        guiGraphics.drawString(Minecraft.getInstance().font,Component.translatable("qualitycrafting.jei.proficiencycost").append(Integer.toString(recipe.getProficiencyRequired())),10,90,0xFF636363,false);
+        int numRarities = recipe.getNumOutputs();
+        //int rarityTick = ((ticks/120)%numRarities);
+        //if(ticks % (120*numRarities) )
+
+
+            List<Integer> allQualities = new ArrayList<Integer>();
+            allQualities.add(0);
+            allQualities.addAll(recipe.getQualityRequired());
+            List<MutableComponent> qualityComponents = new ArrayList<MutableComponent>();
+            for(int i = 0; i < allQualities.size();i++){
+                qualityComponents.add(RarityNBT.styleRarity(i,Integer.toString(allQualities.get(i))));
+                if(i != allQualities.size()-1){
+                    qualityComponents.add(Component.literal("/"));
+                }
+            }
+            MutableComponent allQualitiesComponent = qualityComponents.stream().reduce(Component.empty(),(component,element)->{
+                return component.append(element);
+            });
+
+            /*MutableComponent mycom = Component.empty();
+            for(int i = 0; i < numRarities; i++){
+                mycom = mycom.append(RarityNBT.getRarityComponent(i));
+            }*/
+
+
+            String qualityString = String.join("/",allQualities.stream().map(elem->Integer.toString(elem)).toList());
+            guiGraphics.drawString(Minecraft.getInstance().font,Component.translatable("qualitycrafting.jei.qualitycost").append(allQualitiesComponent),10,100,0xFF636363,false);
+
+
+
+            //guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("for ").append(mycom).append(" Rarity"),10,110,0xFF636363,false);
+
+
+
+
+
+        guiGraphics.drawString(Minecraft.getInstance().font,Component.translatable("qualitycrafting.jei.yieldcost",recipe.getYieldAdded(),recipe.getYieldCost()),10,110,0xFF636363,false);
+
+
 
 
     }
